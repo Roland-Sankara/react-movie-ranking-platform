@@ -1,6 +1,6 @@
 function GenreCard(props){
     return(
-        <div className="w-[25%] rounded-lg bg-[#212846] text-center">
+        <div className="w-[23%] rounded-lg bg-[#212846] text-center">
             <div>
                 <img className="w-full rounded-t-lg" src={props.image} alt="card picture" />
             </div>

@@ -1,8 +1,27 @@
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
 import GenreCard from "../components/GenreCard";
 
 function Home() {
+  let [genres, setGenres] = useState(null);
+
+  function fetchData() {
+    let apiUrl = "http://localhost:1337/api/genres?populate=*";
+    fetch(apiUrl)
+      .then((response) => {
+        return response.json();
+      })
+      .then((dataObject) => {
+        let genreData = dataObject.data;
+        setGenres(genreData);
+      });
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-[#030637]">
       <Header />
@@ -16,24 +35,23 @@ function Home() {
         image="https://movie-ranking-platform.netlify.app/images/ghostbusters-action.webp"
       />
 
-      <h1 className="font-sans text-white text-5xl text-center p-8 font-bold mb-4">Movie Genres</h1>
+      <h1 className="font-sans text-white text-5xl text-center p-8 font-bold mb-4">
+        Movie Genres
+      </h1>
       <section className="w-[70%] m-auto pb-8 flex justify-around">
-        <GenreCard 
-            genre="Action"
-            image="https://movie-ranking-platform.netlify.app/images/Kings-man-action1.webp"
-        />
-        <GenreCard 
-            genre="Adventure"
-            image="https://movie-ranking-platform.netlify.app/images/jumanji-commedy1.webp"
-        />
-        <GenreCard 
-            genre="Sci-fiction"
-            image="https://movie-ranking-platform.netlify.app/images/ant-man-1.webp"
-        />
-        <GenreCard 
-            genre="Romance"
-            image="https://movie-ranking-platform.netlify.app/images/When-in-rome-romance3.jpg"
-        />
+        {genres !== null ? (
+          genres.map((item) => {
+            return (
+              <GenreCard
+                key={item.id}
+                genre={item.attributes.title}
+                image={`http://localhost:1337${item.attributes.image.data.attributes.url}`}
+              />
+            );
+          })
+        ) : (
+          <p>Loading...</p>
+        )}
       </section>
     </div>
   );
